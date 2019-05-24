@@ -1,7 +1,6 @@
 function [ImageStack] = ND2Read(FilePointer, ImagePointer, ImageReadOut, Num)
 
     if ImageReadOut.uiComponents == 1
-
         ImageStack = zeros([ImageReadOut.uiHeight, ImageReadOut.uiWidth, size(Num, 2)],'uint16');
 
         for i = 1:size(Num, 2)

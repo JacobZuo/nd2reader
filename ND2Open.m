@@ -32,5 +32,4 @@ function [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName)
 
     [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(0), ImagePointer);
     setdatatype(ImageReadOut.pImageData, 'uint16Ptr', ImageStru.uiWidth * ImageStru.uiHeight * ImageStru.uiComponents)
-
 end
