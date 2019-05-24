@@ -1,0 +1,3 @@
+*.h linguist-language=matlab
+*.dll linguist-language=matlab
+*.lib linguist-language=matlab
