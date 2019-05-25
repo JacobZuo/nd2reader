@@ -2,18 +2,13 @@ function [] = ND2TIF(FileName, varargin)
 
 Montage='off';
 ChannelMontage='off';
+% Compress='off';
 % ReSize=1080;
 
 if isempty(varargin)
 else
     for i = 1:(size(varargin, 2) / 2)
-        if ischar(varargin{i * 2})
-            eval([varargin{i * 2 - 1}, ' = ''', varargin{i * 2}, '''; ']);
-        elseif size(varargin{2},2)==1
-            eval([varargin{i * 2 - 1}, '=', num2str(varargin{i * 2}), ';']);
-        else
-            AssignVar(varargin{i * 2 - 1},varargin{i * 2})
-        end
+        AssignVar(varargin{i * 2 - 1},varargin{i * 2})
     end
 end
 
@@ -75,7 +70,7 @@ if strcmp(Montage, 'off')
         for i=1:ChannelNum
             TifFileName{i}=[Path, '\', Name, ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
-        
+        Barlength=0;
         for i=1:size(Layer0Index(:),1)
             [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer0Index(i)) - 1), ImagePointer);
             Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
@@ -83,6 +78,7 @@ if strcmp(Montage, 'off')
                 Original_Image = reshape(Image(ChannelIndex(j), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
                 imwrite(Original_Image,TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
             end
+            [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
         end
         
     elseif LayerNum==2
@@ -92,7 +88,7 @@ if strcmp(Montage, 'off')
                 TifFileName{i}{j}=[Path, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
             end
         end
-        
+        Barlength=0;
         for i=1:size(Layer0Index(:),1)
             for j=1:size(Layer1Index(:),1)
                 
@@ -104,6 +100,7 @@ if strcmp(Montage, 'off')
                     imwrite(Original_Image,TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
                 end
             end
+            [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
         end
         
     elseif LayerNum>=3
@@ -115,7 +112,7 @@ if strcmp(Montage, 'off')
                 end
             end
         end
-        
+        Barlength=0;
         for i=1:size(Layer0Index(:),1)
             for j=1:size(Layer1Index(:),1)
                 for kkk=1:size(Layer2Index(:),1)
@@ -126,9 +123,9 @@ if strcmp(Montage, 'off')
                         Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
                         imwrite(Original_Image,TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(kkk)}, 'WriteMode', 'append', 'Compression', 'none')
                     end
-                    
                 end
             end
+            [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
         end
         
     end
@@ -153,6 +150,7 @@ elseif strcmp(Montage,'on')
     if strcmp(ChannelMontage, 'on')
             MontageTifFileName=[Path, '\', Name, '_Montage', '.tif'];
     elseif strcmp(ChannelMontage, 'off')
+        MontageTifFileName=cell(0);
         for i=1:ChannelNum
             MontageTifFileName{i}=[Path, '\', Name, '_Montage_' ,ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
@@ -164,23 +162,24 @@ elseif strcmp(Montage,'on')
         disp('Only one loop, try ChannelMotage On please!')
         return
         elseif strcmp(ChannelMontage, 'on')
+            Barlength=0;
             for i=1:size(Layer0Index(:),1)
                 
                 [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer1Index(j),Layer0Index(i)) - 1), ImagePointer);
                 Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
-                
+                Original_Image=cell(0);
                 for k = 1:size(ChannelIndex(:),1)
                     Original_Image{k} = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
                 end
                 MotageImage=ImageMontage(Original_Image,ImageHeightNum,ImageWidthNum);
                 imwrite(MotageImage,MontageTifFileName, 'WriteMode', 'append', 'Compression', 'none')
-                
+                [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
             end
         end
             
     elseif LayerNum==2
         ImageIndex=reshape(1:ImageInfo.numImages,[ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
-
+        Barlength=0;
         for i=1:size(Layer0Index(:),1)
             Original_Image=cell(0);
             for j=1:size(Layer1Index(:),1)                
@@ -192,8 +191,8 @@ elseif strcmp(Montage,'on')
             end
             
             MotageLayer1Image=cell(size(Original_Image));
-                for i=1:size(Original_Image, 2)
-                    MotageLayer1Image{i}=cell2mat(reshape(Original_Image{i},[ImageHeightNum,ImageWidthNum]));
+                for j=1:size(Original_Image, 2)
+                    MotageLayer1Image{j}=cell2mat(reshape(Original_Image{j},[ImageHeightNum,ImageWidthNum]));
                 end
             
             if strcmp(ChannelMontage, 'on')
@@ -205,7 +204,7 @@ elseif strcmp(Montage,'on')
                     imwrite(MotageLayer1Image{k},MontageTifFileName{ChannelIndex(k)}, 'WriteMode', 'append', 'Compression', 'none')
                 end
             end
-            
+            [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
         end
         
     elseif LayerNum>=3
