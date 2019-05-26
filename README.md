@@ -35,7 +35,7 @@ You can run the command below to get the information from the file. ```FileName`
 ```
 The function will runture a structure ```ImageInfo``` contains the width, height, number of images and also channel numbers. Also the metadata is recorded in ```ImageInfo.metadata```.
 
-Running ```ImageInfo``` will generate the infomation on command window as,
+Running ```ImageInfo``` will get the infomation on command window as,
 
 ```matlab
 There are 3608 images in 2 channel(s).
@@ -48,13 +48,12 @@ The No. 1 layer is: 11 XYPosLoop
 
 The total images number shoule be same as the product of loops number in each layer with the channel number. These images are organised as the figure below.
 
-
 ![ND2 Oganization](/Resource/nd2-oganization.jpg "ND2 Oganization")
 
 
 ### 2.3 Read image.
 
-If you want to read a specific image in a '.nd2' file. You can use the command below to read the image with the specific index ```Num```.
+If you want to read a specific image in a '.nd2' file. You can use the command below to read the image with the specific sequence index ```Num```.
 
 ```matlab
 [Image] = ND2ReadSingle(FileName, Num)
@@ -62,9 +61,9 @@ If you want to read a specific image in a '.nd2' file. You can use the command b
 
 If your '.nd' file has multiple channels, i.e. ```Components```, these channels would be stored in different cells in ```Image``` as ```Image{1}```, ```Image{2}```,.... 
 
-If you want to read out multiple images at once, you can specify the image index as ```Num=[1,2,3...]```. The result ```Image``` will be in a 3D array in Matlab. Additionally, multiple channels images will be stored in different cells and each cell contains the 3D array of the image stack.
+If you want to read out multiple images at once, you can specify the image index as ```Num = [1,2,3...]```. The result ```Image``` will be in a 3D array in Matlab. Additionally, multiple channels images will be stored in different cells and each cell contains the 3D array of the image stack.
 
-Here, ```Single``` means store all the data in a single variable.
+Here, ```Single``` means store all the data into a single variable.
 
 
 ### 2.4 TIF stack output
@@ -74,7 +73,7 @@ The ```ND2TIF``` function can save the ```.nd2``` stack into ```.tif``` stacks b
 ```matlab
 ND2TIF(FileName)
 ```
-Running the above command will seprated your image into ```.tif``` stacks contain only the highest level loops (layer 0, see 2.2 above).
+Running the above command will seprated your image into ```.tif``` stacks of the highest level loops (layer 0, see 2.2 above).
 
 You can also control the output ```.tif``` stack with ```Parameter``` as below. You can find the corresponding parameters in 3.2 below.
 
@@ -86,9 +85,9 @@ ND2TIF(FileName, 'Parameter', value)
 
 ### 3.1 Read images with a loop
 
-If your '.nd2' file is very huge and not able to read all the data into the memory. You can also read the image with a ```for``` loop. Do not use ```ND2ReadSingle``` in a loop at each calling will open and close the file pointer once.
+If your '.nd2' file is very huge and not able to read all the data into the memory. You can also read the image with a ```for``` loop. But, do not use ```ND2ReadSingle``` in a loop as each calling will open and close the file pointer once.
 
-You should create a file pointer, read the images you need, and then close the pointer. Here is an example.
+You would better create a file pointer, read the images you need, and then close the pointer. Here is an example.
 
 ```matlab
 [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName);

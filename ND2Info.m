@@ -13,7 +13,7 @@ function [ImageInfo] = ND2Info(FileName)
     AttibutesValue = Attibutes.Value';
     Attibuteslength = find(AttibutesValue == 0, 1);
     AttibutesJson = char(AttibutesValue(1:Attibuteslength - 1));
-    AttibutesStru = mps.json.decode(AttibutesJson);
+    AttibutesStru = jsondecode(AttibutesJson);
 
     Metadata = calllib('Nd2ReadSdk', 'Lim_FileGetMetadata', FilePointer);
     TestLength=3000;

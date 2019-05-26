@@ -13,7 +13,7 @@ function [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName)
     AttibutesValue = Attibutes.Value';
     Attibuteslength = find(AttibutesValue == 0, 1);
     AttibutesJson = char(AttibutesValue(1:Attibuteslength - 1));
-    AttibutesStru = mps.json.decode(AttibutesJson);
+    AttibutesStru = jsondecode(AttibutesJson);
 
     % Metadata = calllib('Nd2ReadSdk','Lim_FileGetMetadata',FilePointer);
     % setdatatype(Metadata,'uint8Ptr',5000)
