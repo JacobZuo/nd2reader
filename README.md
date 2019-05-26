@@ -4,7 +4,7 @@
 
 ## 1. Overview
 
-This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windows). The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imageing](https://www.laboratory-imaging.com/). 
+This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windows). The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imaging](https://www.laboratory-imaging.com/). 
 
 ## 2. Usage
 
