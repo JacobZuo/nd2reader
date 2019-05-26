@@ -5,6 +5,7 @@ ChannelMontage='off';
 % Compress='off';
 % ReSize=1080;
 
+% Reload the parameters input by user
 if isempty(varargin)
 else
     for i = 1:(size(varargin, 2) / 2)
@@ -14,15 +15,18 @@ end
 
 disp('----------------------------------------------------------------------------------------------------')
 disp('Getting nd2 infomation...')
-% Reload the parameters input by user
 
+[Path, Name, ~] = fileparts(FileName);
 [ImageInfo] = ND2Info(FileName);
 [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName);
 
-[Path, Name, ~] = fileparts(FileName);
+if exist('SavePath','var')
+else
+    SavePath=Path;
+end
 
 disp('----------------------------------------------------------------------------------------------------')
-disp('Setting up .tif file name and image size...')
+disp('Setting .tif stack(s) information...')
 
 ChannelNum=ImageInfo.metadata.contents.channelCount;
 LayerNum=size(ImageInfo.Experiment,1);
@@ -59,7 +63,8 @@ elseif LayerNum>=3
     LayerIndex{2}=Layer2Index;
 end
 
-
+disp('----------------------------------------------------------------------------------------------------')
+disp('Saving as .tif stack(s)...')
 
 if strcmp(Montage, 'off')
     
@@ -68,7 +73,7 @@ if strcmp(Montage, 'off')
     if LayerNum==1
         ImageIndex=reshape(1:ImageInfo.numImages,[1,ImageInfo.Experiment(1).count]);
         for i=1:ChannelNum
-            TifFileName{i}=[Path, '\', Name, ImageInfo.metadata.channels(i).channel.name, '.tif'];
+            TifFileName{i}=[SavePath, '\', Name, ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
         Barlength=0;
         for i=1:size(Layer0Index(:),1)
@@ -85,7 +90,7 @@ if strcmp(Montage, 'off')
         ImageIndex=reshape(1:ImageInfo.numImages,[ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
         for i=1:ChannelNum
             for j=1:ImageInfo.Experiment(2).count
-                TifFileName{i}{j}=[Path, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
+                TifFileName{i}{j}=[SavePath, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
             end
         end
         Barlength=0;
@@ -104,24 +109,24 @@ if strcmp(Montage, 'off')
         end
         
     elseif LayerNum>=3
-        ImageIndex=reshape(1:ImageInfo.numImages,[ImageInfo.Experiment(3).count,ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
+        ImageIndex=reshape(1:ImageInfo.numImages,[ExperimentCount3,ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
         for i=1:ChannelNum
             for j=1:ImageInfo.Experiment(2).count
                 for k=1:ExperimentCount3
-                    TifFileName{i}{j}{k}=[Path, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
+                    TifFileName{i}{j}{k}=[SavePath, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
                 end
             end
         end
         Barlength=0;
         for i=1:size(Layer0Index(:),1)
             for j=1:size(Layer1Index(:),1)
-                for kkk=1:size(Layer2Index(:),1)
-                    [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer2Index(kkk),Layer1Index(j),Layer0Index(i)) - 1), ImagePointer);
+                for l=1:size(Layer2Index(:),1)
+                    [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer2Index(l),Layer1Index(j),Layer0Index(i)) - 1), ImagePointer);
                     Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
                     
                     for k = 1:size(ChannelIndex(:),1)
                         Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
-                        imwrite(Original_Image,TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(kkk)}, 'WriteMode', 'append', 'Compression', 'none')
+                        imwrite(Original_Image,TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
                     end
                 end
             end
@@ -148,11 +153,11 @@ elseif strcmp(Montage,'on')
     end
     
     if strcmp(ChannelMontage, 'on')
-            MontageTifFileName=[Path, '\', Name, '_Montage', '.tif'];
+            MontageTifFileName=[SavePath, '\', Name, '_Montage', '.tif'];
     elseif strcmp(ChannelMontage, 'off')
         MontageTifFileName=cell(0);
         for i=1:ChannelNum
-            MontageTifFileName{i}=[Path, '\', Name, '_Montage_' ,ImageInfo.metadata.channels(i).channel.name, '.tif'];
+            MontageTifFileName{i}=[SavePath, '\', Name, '_Montage_' ,ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
     end
     
