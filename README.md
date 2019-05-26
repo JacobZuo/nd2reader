@@ -4,7 +4,7 @@
 
 ## 1. Overview
 
-This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windows). The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imageing](https://www.laboratory-imaging.com/). 
+This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windows). The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imaging](https://www.laboratory-imaging.com/). 
 
 ## 2. Usage
 
@@ -46,7 +46,7 @@ The No. 0 layer is: 164 TimeLoop
 The No. 1 layer is: 11 XYPosLoop
 ```
 
-The total images number shoule be same as the product of loops number in each layer with the channel number. These images are organised as the figure below.
+The total images number should be same as the product of loops number in each layer with the channel number. These images are organised as the figure below.
 
 ![ND2 Oganization](/Resource/nd2-oganization.jpg "ND2 Oganization")
 
