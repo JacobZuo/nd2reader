@@ -6,6 +6,8 @@
 
 This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windows). The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imaging](https://www.laboratory-imaging.com/). 
 
+For now, only uint16 mono-color ```.nd2``` file is supported. The reader can get the infomation of channel infomation and loops infomation of the file.
+
 ## 2. Usage
 
 ### 2.1 Load the library
@@ -20,11 +22,12 @@ If you do not have any compiler, you can add 'MinGW64 Compiler' in 'HOME' > 'Add
 
 ![MinGW64](/Resource/MinGW64.jpg "MinGW64")
 
-Once you set up the C compiler, you and add the 'SDK' into Matlab 'Path' and run
+Once you set up the C compiler, you should able to sucessfully loading the library by command,
 
 ```matlab
 loadlibrary('Nd2ReadSdk', 'Nd2ReadSdk.h')
 ```
+Noticed that you should add the 'SDK' (both 'include' and 'windows' folder) into Matlab 'Path'. 
 
 ### 2.2 Read the infomation in '.nd2' file
 
@@ -33,9 +36,9 @@ You can run the command below to get the information from the file. ```FileName`
 ```matlab
 [ImageInfo] = ND2Info(FileName)
 ```
-The function will runture a structure ```ImageInfo``` contains the width, height, number of images and also channel numbers. Also the metadata is recorded in ```ImageInfo.metadata```.
+The function will runture a structure ```ImageInfo``` contains the width, height, number of images and also channel numbers. Also the experiment details are recorded in ```ImageInfo.metadata``` and ```ImageInfo.Experiment```.
 
-Running ```ImageInfo``` will get the infomation on command window as,
+The infomation will be print on the command window such as,
 
 ```matlab
 There are 3608 images in 2 channel(s).
@@ -46,14 +49,14 @@ The No. 0 layer is: 164 TimeLoop
 The No. 1 layer is: 11 XYPosLoop
 ```
 
-The total images number should be same as the product of loops number in each layer with the channel number. These images are organised as the figure below.
+The total images number should be same as the product of loops number in each layer and also the channels number. These images are organised as the figure below.
 
 ![ND2 Oganization](/Resource/nd2-oganization.jpg "ND2 Oganization")
 
 
 ### 2.3 Read image.
 
-If you want to read a specific image in a '.nd2' file. You can use the command below to read the image with the specific sequence index ```Num```.
+If you want to read a specific image in a '.nd2' file. You can use the command below to read the image with the specific sequence index (not the image index) ```Num```.
 
 ```matlab
 [Image] = ND2ReadSingle(FileName, Num)
@@ -100,21 +103,21 @@ ND2Close(FilePointer)
 
 ### 3.2 Select .tif output channel and merge montage stack.
 
-You can control the loop length of layer 0 by setting ```'Layer0', Index``` such as,
+You can control output ```.tif``` stack length by setting ```..., 'Layer0', Index``` such as,
 
 ```matlab
 ND2TIF(FileName, 'Layer0', 2:2:100)
 ```
 
-Each output ```.tif``` stacks will only contain the ```2:2:100``` of the highest level loop.
+Each output ```.tif``` stacks will only contain the ```2:2:100``` of the ```layer0``` loop.
 
-You can choose the specific stack or channel by setting ```'Layer1', Index``` and ```'ChannelIndex', Index```
+You can choose the specific stack or channel by setting ```..., 'Layer1', Index``` and ```..., 'Channel', Index```
 
 ```matlab
 ND2TIF(FileName, 'Layer1', [2, 3, 4], 'ChannelIndex', 2)
 ```
 
-This will only generate 3 ```.tif``` stacks, the ```2nd``` channel of No. ```2, 3, 4``` in layer 1 loops.
+This will only generate 3 ```.tif``` stacks, i.e., the ```2nd``` channel of No. ```2, 3, 4``` in layer 1 loops.
 
 You can also generate a montage image by setting ```'Montage', 'on'```. You can make montage in layer 1 loop and also channels. You can arrange the output montage image with a matrix index.
 
@@ -130,4 +133,4 @@ The images in different channels will be seprated into different montage stacks.
 ```matlab
 ND2TIF(FileName, 'Montage', 'on', 'Layer1', [2, 3; 4, 5], 'ChannelMontage', 'on')
 ```
-You can also set the arrangment of each channel by set ```'ChannelIndex'``` with a matrix.
+You can also set the arrangment of each channel by set ```'Channel'``` with a matrix.

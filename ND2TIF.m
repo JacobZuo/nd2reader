@@ -2,6 +2,7 @@ function [] = ND2TIF(FileName, varargin)
 
 Montage='off';
 ChannelMontage='off';
+Resize='off';
 % Compress='off';
 % ReSize=1080;
 
@@ -17,7 +18,12 @@ disp('--------------------------------------------------------------------------
 disp('Getting nd2 infomation...')
 
 [Path, Name, ~] = fileparts(FileName);
-[ImageInfo] = ND2Info(FileName);
+
+if exist('ImageInfo','var')
+    PrintInfo(ImageInfo)
+else
+    [ImageInfo] = ND2Info(FileName);
+end
 [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName);
 
 if exist('SavePath','var')
@@ -31,7 +37,11 @@ disp('Setting .tif stack(s) information...')
 ChannelNum=ImageInfo.metadata.contents.channelCount;
 LayerNum=size(ImageInfo.Experiment,1);
 
-if exist('ChannelIndex','var')
+LayerIndex=cell(0);
+
+
+if exist('Channel','var')
+    ChannelIndex=Channel;
 else
     ChannelIndex=1:ChannelNum;
 end
@@ -153,7 +163,7 @@ elseif strcmp(Montage,'on')
     end
     
     if strcmp(ChannelMontage, 'on')
-            MontageTifFileName=[SavePath, '\', Name, '_Montage', '.tif'];
+        MontageTifFileName=[SavePath, '\', Name, '_Montage', '.tif'];
     elseif strcmp(ChannelMontage, 'off')
         MontageTifFileName=cell(0);
         for i=1:ChannelNum
@@ -164,8 +174,8 @@ elseif strcmp(Montage,'on')
     
     if LayerNum==1
         if strcmp(ChannelMontage, 'off')
-        disp('Only one loop, try ChannelMotage On please!')
-        return
+            disp('Only one loop, try ChannelMotage On please!')
+            return
         elseif strcmp(ChannelMontage, 'on')
             Barlength=0;
             for i=1:size(Layer0Index(:),1)
@@ -181,13 +191,13 @@ elseif strcmp(Montage,'on')
                 [~, Barlength] = DisplayBar(i, size(Layer0Index(:),1), Barlength);
             end
         end
-            
+        
     elseif LayerNum==2
         ImageIndex=reshape(1:ImageInfo.numImages,[ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
         Barlength=0;
         for i=1:size(Layer0Index(:),1)
             Original_Image=cell(0);
-            for j=1:size(Layer1Index(:),1)                
+            for j=1:size(Layer1Index(:),1)
                 [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer1Index(j),Layer0Index(i)) - 1), ImagePointer);
                 Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
                 for k = 1:size(ChannelIndex(:),1)
@@ -196,15 +206,15 @@ elseif strcmp(Montage,'on')
             end
             
             MotageLayer1Image=cell(size(Original_Image));
-                for j=1:size(Original_Image, 2)
-                    MotageLayer1Image{j}=cell2mat(reshape(Original_Image{j},[ImageHeightNum,ImageWidthNum]));
-                end
+            for j=1:size(Original_Image, 2)
+                MotageLayer1Image{j}=cell2mat(reshape(Original_Image{j},[ImageHeightNum,ImageWidthNum]));
+            end
             
             if strcmp(ChannelMontage, 'on')
-               MotageImage=cell2mat(reshape(MotageLayer1Image,[ChannelHeightNum,ChannelWidthNum]));
-               imwrite(MotageImage,MontageTifFileName, 'WriteMode', 'append', 'Compression', 'none')
-
-            elseif strcmp(ChannelMontage, 'off')                
+                MotageImage=cell2mat(reshape(MotageLayer1Image,[ChannelHeightNum,ChannelWidthNum]));
+                imwrite(MotageImage,MontageTifFileName, 'WriteMode', 'append', 'Compression', 'none')
+                
+            elseif strcmp(ChannelMontage, 'off')
                 for k = 1:size(ChannelIndex(:),1)
                     imwrite(MotageLayer1Image{k},MontageTifFileName{ChannelIndex(k)}, 'WriteMode', 'append', 'Compression', 'none')
                 end
@@ -214,10 +224,10 @@ elseif strcmp(Montage,'on')
         
     elseif LayerNum>=3
         
-        disp('Warning, too many layers, do not support montage mode.')        
+        disp('Warning, too many layers, do not support montage mode.')
         return
     end
-
+    
 end
 
 end
