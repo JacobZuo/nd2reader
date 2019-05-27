@@ -8,12 +8,12 @@ function [ImageInfo] = ND2Info(FileName)
     [FilePointer] = calllib('Nd2ReadSdk', 'Lim_FileOpenForReadUtf8', FileID);
     numImages = calllib('Nd2ReadSdk', 'Lim_FileGetSeqCount', FilePointer);
     CoordSize = calllib('Nd2ReadSdk', 'Lim_FileGetCoordSize', FilePointer);
-    Attibutes = calllib('Nd2ReadSdk', 'Lim_FileGetAttributes', FilePointer);
-    setdatatype(Attibutes, 'uint8Ptr', 500)
-    AttibutesValue = Attibutes.Value';
-    Attibuteslength = find(AttibutesValue == 0, 1);
-    AttibutesJson = char(AttibutesValue(1:Attibuteslength - 1));
-    AttibutesStru = jsondecode(AttibutesJson);
+    Attributes = calllib('Nd2ReadSdk', 'Lim_FileGetAttributes', FilePointer);
+    setdatatype(Attributes, 'uint8Ptr', 500)
+    AttributesValue = Attributes.Value';
+    Attributeslength = find(AttributesValue == 0, 1);
+    AttributesJson = char(AttributesValue(1:Attributeslength - 1));
+    AttributesStru = jsondecode(AttributesJson);
 
     Metadata = calllib('Nd2ReadSdk', 'Lim_FileGetMetadata', FilePointer);
     TestLength=3000;
@@ -53,8 +53,7 @@ function [ImageInfo] = ND2Info(FileName)
     Experimentlength = find(ExperimentValue == 0, 1);
     ExperimentJson = char(ExperimentValue(1:Experimentlength - 1));
     ExperimentStru=jsondecode(ExperimentJson);
-    
-    
+
     NumInCoord=zeros(1,CoordSize);
     for i = 1:CoordSize
         NumInCoord(i)=ExperimentStru(i).count;
@@ -73,9 +72,9 @@ function [ImageInfo] = ND2Info(FileName)
     ImageInfo.CoordSize = CoordSize;
     
     ImageInfo.NumInCoord = NumInCoord;
-    ImageInfo.ImageWidth = AttibutesStru.widthPx;
-    ImageInfo.ImageHeight = AttibutesStru.heightPx;
-    ImageInfo.Component = AttibutesStru.componentCount;
+    ImageInfo.ImageWidth = AttributesStru.widthPx;
+    ImageInfo.ImageHeight = AttributesStru.heightPx;
+    ImageInfo.Component = AttributesStru.componentCount;
     
     PrintInfo(ImageInfo);
     
