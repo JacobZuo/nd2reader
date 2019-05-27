@@ -134,3 +134,13 @@ The images in different channels will be seprated into different montage stacks.
 ND2TIF(FileName, 'Montage', 'on', 'Layer1', [2, 3; 4, 5], 'ChannelMontage', 'on')
 ```
 You can also set the arrangment of each channel by set ```'Channel'``` with a matrix.
+
+### 3.2 Sequence infomation.
+
+You can get the time and position information of each frame in the sequence by
+
+```matlab
+[SeqTime,SeqPosition] = SeqInfo(FileName,Num)
+```
+
+If your ```.nd2``` file contains multiple channels. The infomation will be stored into cells as ```Seqtime{i}, SeqPosition{i}```.
