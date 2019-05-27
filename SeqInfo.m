@@ -20,6 +20,9 @@ FrameMetadataLength = find(FrameMetadataValue == 0, 1);
 FrameMetadataJson = char(FrameMetadataValue(1:FrameMetadataLength - 1));
 FrameMetadataStru=jsondecode(FrameMetadataJson);
 
+setdatatype(FrameMetadata, 'voidPtr', TestLength)
+calllib('Nd2ReadSdk', 'Lim_FileFreeString', FrameMetadata);
+
 if FrameMetadataStru.contents.channelCount==1
     SeqTime=zeros(size(Num,2),1);
     SeqPosition=zeros(size(Num,2),3);
@@ -50,8 +53,6 @@ for i=1:size(Num,2)
         SeqTime(i)=FrameMetadataStru.channels.time.relativeTimeMs;
         SeqPosition(i,:)=FrameMetadataStru.channels.position.stagePositionUm';
     elseif FrameMetadataStru.contents.channelCount>1
-        SeqTime=cell(0);
-        SeqPosition=cell(0);
         for j=1:FrameMetadataStru.contents.channelCount
             SeqTime{j}(i)=FrameMetadataStru.channels(j).time.relativeTimeMs;
             SeqPosition{j}(i,:)=FrameMetadataStru.channels(j).position.stagePositionUm';
@@ -65,6 +66,7 @@ end
 
 
 
+calllib('Nd2ReadSdk', 'Lim_FileClose', FilePointer);
 
 end
 
