@@ -64,7 +64,9 @@ If you want to read a specific image in a '.nd2' file. You can use the command b
 
 If your '.nd' file has multiple channels, i.e. ```Components```, these channels would be stored in different cells in ```Image``` as ```Image{1}```, ```Image{2}```,.... 
 
-If you want to read out multiple images at once, you can specify the image index as ```Num = [1,2,3...]```. The result ```Image``` will be in a 3D array in Matlab. Additionally, multiple channels images will be stored in different cells and each cell contains the 3D array of the image stack.
+If you want to read out multiple images at once, you can specify the image index as ```Num = [1,2,3...]```. The result ```Image``` will be in a 3D array in Matlab. Additionally, multiple channels images will be stored in different cells and each cell contains the 3D matrix of the image stack.
+
+If you haven't spicified the image index ```Num```. ```[Image] = ND2ReadSingle(FileName)``` will read all the images in the file into ```Image```.
 
 Here, ```Single``` means store all the data into a single variable.
 
