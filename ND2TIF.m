@@ -3,9 +3,10 @@ function [] = ND2TIF(FileName, varargin)
 Montage='off';
 ChannelMontage='off';
 Resize='off';
+Tag=char(datetime('now','format','-HH-mm-ss'));
+
 % Compress='off';
 % ReSize=1080;
-
 % Reload the parameters input by user
 if isempty(varargin)
 else
@@ -83,7 +84,7 @@ if strcmp(Montage, 'off')
     if LayerNum==1
         ImageIndex=reshape(1:ImageInfo.numImages,[1,ImageInfo.Experiment(1).count]);
         for i=1:ChannelNum
-            TifFileName{i}=[SavePath, '\', Name, ImageInfo.metadata.channels(i).channel.name, '.tif'];
+            TifFileName{i}=[SavePath, '\', Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
         Barlength=0;
         for i=1:size(Layer0Index(:),1)
@@ -100,7 +101,7 @@ if strcmp(Montage, 'off')
         ImageIndex=reshape(1:ImageInfo.numImages,[ImageInfo.Experiment(2).count,ImageInfo.Experiment(1).count]);
         for i=1:ChannelNum
             for j=1:ImageInfo.Experiment(2).count
-                TifFileName{i}{j}=[SavePath, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
+                TifFileName{i}{j}=[SavePath, '\', Name, Tag, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
             end
         end
         Barlength=0;
@@ -123,7 +124,7 @@ if strcmp(Montage, 'off')
         for i=1:ChannelNum
             for j=1:ImageInfo.Experiment(2).count
                 for k=1:ExperimentCount3
-                    TifFileName{i}{j}{k}=[SavePath, '\', Name, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
+                    TifFileName{i}{j}{k}=[SavePath, '\', Name, Tag, '_' ,ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
                 end
             end
         end
@@ -163,11 +164,11 @@ elseif strcmp(Montage,'on')
     end
     
     if strcmp(ChannelMontage, 'on')
-        MontageTifFileName=[SavePath, '\', Name, '_Montage', '.tif'];
+        MontageTifFileName=[SavePath, '\', Name, Tag, '_Montage', '.tif'];
     elseif strcmp(ChannelMontage, 'off')
         MontageTifFileName=cell(0);
         for i=1:ChannelNum
-            MontageTifFileName{i}=[SavePath, '\', Name, '_Montage_' ,ImageInfo.metadata.channels(i).channel.name, '.tif'];
+            MontageTifFileName{i}=[SavePath, '\', Name, Tag, '_Montage_' ,ImageInfo.metadata.channels(i).channel.name, '.tif'];
         end
     end
     
