@@ -1,26 +1,32 @@
-function [Percentage, Barlength] = DisplayBar(Index, Length, Barlength)
-    % TODO write a introduction
-
-    if Index == 1
-        disp('--------10%-------20%-------30%-------40%-------50%-------60%-------70%-------80%-------90%---------')
-    else
-    end
+function [Percentage, Barlength] = DisplayBar(Index, Length)
 
     Percentage = Index / Length * 100;
+    Barlength = floor(Percentage);
 
-    if Percentage - Barlength < 1
-    else
+    if Index == 1
 
-        for i = 1:floor(Percentage - Barlength)
-            fprintf('>')
-            Barlength = Barlength + 1;
+        for i = 1:100
+            fprintf('-')
         end
 
+        fprintf('%6.2f%%', 0)
+    else
     end
+
+    fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
+
+    for i = 1:Barlength
+        fprintf('>')
+    end
+
+    for i = 1:(100 - Barlength)
+        fprintf('-')
+    end
+
+    fprintf('%6.2f%%', Percentage)
 
     if Barlength == 100
         fprintf('\n')
     else
-    end
 
-end
+    end
