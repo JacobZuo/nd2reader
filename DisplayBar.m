@@ -4,38 +4,33 @@ function [Percentage, Barlength] = DisplayBar(Index, Length)
     Barlength = floor(Percentage);
 
     if Index == 1
+    else
+        fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
+    end
+
+    if Barlength == 100
 
         for i = 1:100
-            fprintf('-')
+            fprintf('#')
         end
 
-        fprintf('%6.2f%%', Percentage)
-    else
+    elseif Barlength >= 1
 
-        fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
-        
-        if Barlength == 100
-            for i = 1:100
-                fprintf('#')
-            end
-            
-        elseif Barlength>=1
-            for i = 1:(Barlength - 1)
-                fprintf('#')
-            end
-            fprintf('>')
+        for i = 1:(Barlength - 1)
+            fprintf('#')
         end
-        
-        for i = 1:(100 - Barlength)
-            fprintf('-')
-        end
-        
-        fprintf('%6.2f%%', Percentage)
-        
-        if Barlength == 100
-            fprintf('\n')
-        end
-    
+
+        fprintf('>')
     end
-        
+
+    for i = 1:(100 - Barlength)
+        fprintf('-')
     end
+
+    fprintf('%6.2f%%', Percentage)
+
+    if Barlength == 100
+        fprintf('\n')
+    end
+
+end
