@@ -17,7 +17,7 @@ function [] = ND2TIF(FileName, varargin)
 
     end
 
-    disp('-----------------------------------------------------------------------------------------------------------')
+    disp('--------------------------------------------------------------------------------')
     disp('Getting nd2 infomation...')
 
     [Path, Name, ~] = fileparts(FileName);
@@ -35,7 +35,7 @@ function [] = ND2TIF(FileName, varargin)
         SavePath = Path;
     end
 
-    disp('-----------------------------------------------------------------------------------------------------------')
+    disp('--------------------------------------------------------------------------------')
     disp('Setting .tif stack(s) information...')
 
     ChannelNum = ImageInfo.metadata.contents.channelCount;
@@ -78,7 +78,7 @@ function [] = ND2TIF(FileName, varargin)
         LayerIndex{2} = Layer2Index;
     end
 
-    disp('-----------------------------------------------------------------------------------------------------------')
+    disp('--------------------------------------------------------------------------------')
     disp('Saving as .tif stack(s)...')
 
     if strcmp(Montage, 'off')

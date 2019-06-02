@@ -1,16 +1,17 @@
 function [Percentage, Barlength] = DisplayBar(Index, Length)
 
     Percentage = Index / Length * 100;
-    Barlength = floor(Percentage);
+    Barlength = floor(Index / Length * 60);
 
     if Index == 1
+        fprintf('Processing [')
     else
-        fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
+        fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
     end
 
-    if Barlength == 100
+    if Barlength == 60
 
-        for i = 1:100
+        for i = 1:60
             fprintf('#')
         end
 
@@ -23,13 +24,13 @@ function [Percentage, Barlength] = DisplayBar(Index, Length)
         fprintf('>')
     end
 
-    for i = 1:(100 - Barlength)
+    for i = 1:(60 - Barlength)
         fprintf('-')
     end
 
-    fprintf('%6.2f%%', Percentage)
+    fprintf(']%6.1f%%', Percentage)
 
-    if Barlength == 100
+    if Barlength == 60
         fprintf('\n')
     end
 
