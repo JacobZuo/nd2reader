@@ -80,6 +80,8 @@ ND2TIF(FileName)
 ```
 Running the above command will seprated your image into ```.tif``` stacks of the highest level loops (layer 0, see 2.2 above).
 
+![Save as TIF](/Resource/Save-as-tif.gif "Save as TIF")
+
 You can also control the output ```.tif``` stack with ```Parameter``` as below. You can find the corresponding parameters in 3.2 below.
 
 ```matlab
