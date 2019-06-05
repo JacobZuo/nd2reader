@@ -363,5 +363,7 @@ function [] = ND2TIF(FileName, varargin)
         end
 
     end
+    
+    ND2Close(FilePointer);
 
 end

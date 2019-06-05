@@ -36,8 +36,6 @@ elseif FrameMetadataStru.contents.channelCount>1
 else
 end
 
-Barlength=0;
-
 for i=1:size(Num,2)
     
     FrameMetadata = calllib('Nd2ReadSdk', 'Lim_FileGetFrameMetadata', FilePointer,Num(i)-1);
@@ -60,7 +58,7 @@ for i=1:size(Num,2)
     else
     end
     
-    [~, Barlength] = DisplayBar(i, size(Num,2), Barlength);
+    [~, Barlength] = DisplayBar(i, size(Num,2));
     
 end
 
