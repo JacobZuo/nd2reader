@@ -139,7 +139,38 @@ ND2TIF(FileName, 'Montage', 'on', 'Layer1', [2, 3; 4, 5], 'ChannelMontage', 'on'
 ```
 You can also set the arrangment of each channel by set ```'Channel'``` with a matrix.
 
-### 3.2 Sequence infomation.
+
+### 3.3 Image compress and resize
+
+You can set ```'Compress', 'on'``` to compress the images into ```8 bits``` ```.tif``` stacks. The images will be compress to ```0-255``` with the ```min``` and ```max``` value of the first image in the stack.
+
+```matlab
+ND2TIF(FileName, 'Compress', 'on')
+```
+You can set ```'Resize', 1080``` to resize the height of output ```.tif``` stack to ```1080p```. 
+
+```matlab
+ND2TIF(FileName, 'Resize', 1080)
+```
+
+For montage stacks, the value contols the final output iamge size of the stack. You can set the value to other number as you with, such as, ```'Resize', 1024``` or ```'Resize', 720``` 
+
+### 3.4 Controling parameters
+
+|      Parameters      	| Value                                                                                                                                    	|
+|:--------------------:	|------------------------------------------------------------------------------------------------------------------------------------------	|
+|     ```Layer0```     	| The index of the layer0 loop, length of the ```.tif``` stack. For example, ```1:100```                                                   	|
+|     ```Layer1```     	| The index of the layer1 loop. If ```Montage``` is ```'on'```, the images will be combined same as the matrix. For example, ```[1,2;3,4]``` 	|
+|     ```Channel```    	| The index of the channels. If ```ChannelMontage``` is ```'on'```, the images will be combined same as the matrix. For example, ```[1,2]``` 	|
+|     ```Montage```    	| Control if combined the images in layer1 loop into one stack. For example, ```'on'```, ```'off'```.                                          	|
+| ```ChannelMontage``` 	| Control if combined the images in different channels into one stack. For example, ```'on'```, ```'off'```.                                   	|
+|    ```Compress```    	| Control if compress the images into ```8 bits```. For example, ```'on'```, ```'off'```.                                                      	|
+|     ```Resize```     	| Control if resize the images. For example, ```1080```, ```'off'```.                                                                        	|
+
+For now, set ```'ChannelMontage', 'on'``` will automatically set ```'Montage', 'on'``` and ```'Compress', 'on'```； set ```'Resize', 1080``` （or other number） will automatically set ```'Compress', 'on'```; set ```'Resize', 'on'``` will automatically set ```'Resize', 1080```.
+
+
+### 3.5 Sequence infomation.
 
 You can get the time and position information of each frame in the sequence by
 

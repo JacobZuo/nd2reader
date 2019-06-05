@@ -4,9 +4,8 @@ function [] = ND2TIF(FileName, varargin)
     ChannelMontage = 'off';
     Tag = char(datetime('now', 'format', '-HH-mm-ss'));
 
-    % Resize='off';
-    % Compress='off';
-    % ReSize=1080;
+    Resize = 'off';
+    Compress = 'off';
     % Reload the parameters input by user
     if isempty(varargin)
     else
@@ -15,6 +14,21 @@ function [] = ND2TIF(FileName, varargin)
             AssignVar(varargin{i * 2 - 1}, varargin{i * 2})
         end
 
+    end
+
+    if strcmp(ChannelMontage, 'on')
+        Montage = 'on';
+    else
+    end
+
+    if strcmp(Resize, 'off')
+    else
+        Compress = 'on';
+    end
+
+    if strcmp(Resize, 'on')
+        Resize = 1080;
+    else
     end
 
     disp('--------------------------------------------------------------------------------')
@@ -97,8 +111,26 @@ function [] = ND2TIF(FileName, varargin)
                 Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
 
                 for j = 1:size(ChannelIndex(:), 1)
+
                     Original_Image = reshape(Image(ChannelIndex(j), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
-                    imwrite(Original_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                    if strcmp(Compress, 'off')
+
+                        imwrite(Original_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                    else
+
+                        if i == 1
+                            Min_Intensity = double(min(Original_Image(:)));
+                            Max_Intensity = double(max(Original_Image(:)));
+                        else
+                        end
+
+                        Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
+                        imwrite(Compressed_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                    end
+
                 end
 
                 DisplayBar(i, size(Layer0Index(:), 1));
@@ -123,8 +155,26 @@ function [] = ND2TIF(FileName, varargin)
                     Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
 
                     for k = 1:size(ChannelIndex(:), 1)
+
                         Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
-                        imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                        if strcmp(Compress, 'off')
+
+                            imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                        else
+
+                            if i == 1
+                                Min_Intensity = double(min(Original_Image(:)));
+                                Max_Intensity = double(max(Original_Image(:)));
+                            else
+                            end
+
+                            Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
+                            imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                        end
+
                     end
 
                 end
@@ -156,8 +206,26 @@ function [] = ND2TIF(FileName, varargin)
                         Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
 
                         for k = 1:size(ChannelIndex(:), 1)
+
                             Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
-                            imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                            if strcmp(Compress, 'off')
+
+                                imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                            else
+
+                                if i == 1
+                                    Min_Intensity = double(min(Original_Image(:)));
+                                    Max_Intensity = double(max(Original_Image(:)));
+                                else
+                                end
+
+                                Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
+                                imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                            end
+
                         end
 
                     end
@@ -201,6 +269,7 @@ function [] = ND2TIF(FileName, varargin)
         end
 
         if LayerNum == 1
+            ImageIndex = reshape(1:ImageInfo.numImages, [1, ImageInfo.Experiment(1).count]);
 
             if strcmp(ChannelMontage, 'off')
                 disp('Only one loop, try ChannelMotage On please!')
@@ -208,17 +277,26 @@ function [] = ND2TIF(FileName, varargin)
             elseif strcmp(ChannelMontage, 'on')
 
                 for i = 1:size(Layer0Index(:), 1)
-
-                    [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer1Index(j), Layer0Index(i)) - 1), ImagePointer);
+                    [~, ~, ImageReadOut] = calllib('Nd2ReadSdk', 'Lim_FileGetImageData', FilePointer, uint32(ImageIndex(Layer0Index(i)) - 1), ImagePointer);
                     Image = reshape(ImageReadOut.pImageData, [ImageReadOut.uiComponents, ImageReadOut.uiWidth * ImageReadOut.uiHeight]);
                     Original_Image = cell(0);
+                    Compressed_Image = cell(0);
 
                     for k = 1:size(ChannelIndex(:), 1)
                         Original_Image{k} = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
+
+                        if i == 1
+                            Min_Intensity(k) = double(min(Original_Image{k}(:)));
+                            Max_Intensity(k) = double(max(Original_Image{k}(:)));
+                        else
+                        end
+
+                        Compressed_Image{k} = ImageCompress(Original_Image{k}, Min_Intensity(k), Max_Intensity(k), Resize);
                     end
 
-                    MotageImage = ImageMontage(Original_Image, ImageHeightNum, ImageWidthNum);
+                    MotageImage = cell2mat(reshape(Compressed_Image, [ChannelHeightNum, ChannelWidthNum]));
                     imwrite(MotageImage, MontageTifFileName, 'WriteMode', 'append', 'Compression', 'none')
+
                     DisplayBar(i, size(Layer0Index(:), 1));
                 end
 
@@ -241,19 +319,36 @@ function [] = ND2TIF(FileName, varargin)
                 end
 
                 MotageLayer1Image = cell(size(Original_Image));
+                Compressed_Image = cell(size(Original_Image));
 
                 for j = 1:size(Original_Image, 2)
                     MotageLayer1Image{j} = cell2mat(reshape(Original_Image{j}, [ImageHeightNum, ImageWidthNum]));
+
+                    if i == 1
+                        Min_Intensity(j) = double(min(MotageLayer1Image{j}(:)));
+                        Max_Intensity(j) = double(max(MotageLayer1Image{j}(:)));
+                    else
+                    end
+
+                    Compressed_Image{j} = ImageCompress(MotageLayer1Image{j}, Min_Intensity(j), Max_Intensity(j), Resize);
+
                 end
 
                 if strcmp(ChannelMontage, 'on')
-                    MotageImage = cell2mat(reshape(MotageLayer1Image, [ChannelHeightNum, ChannelWidthNum]));
+
+                    MotageImage = cell2mat(reshape(Compressed_Image, [ChannelHeightNum, ChannelWidthNum]));
                     imwrite(MotageImage, MontageTifFileName, 'WriteMode', 'append', 'Compression', 'none')
 
                 elseif strcmp(ChannelMontage, 'off')
 
                     for k = 1:size(ChannelIndex(:), 1)
-                        imwrite(MotageLayer1Image{k}, MontageTifFileName{ChannelIndex(k)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                        if strcmp(Compress, 'off')
+                            imwrite(MotageLayer1Image{k}, MontageTifFileName{ChannelIndex(k)}, 'WriteMode', 'append', 'Compression', 'none')
+                        else
+                            imwrite(Compressed_Image{k}, MontageTifFileName{ChannelIndex(k)}, 'WriteMode', 'append', 'Compression', 'none')
+                        end
+
                     end
 
                 end
