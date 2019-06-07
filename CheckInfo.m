@@ -97,6 +97,16 @@ function [ImageInfo] = CheckInfo(ImageInfo)
 
     end
 
+    ImageCount=1;
+    for i=1:size(ExperimentStru,3)
+        ImageCount=ExperimentStru(i).count*ImageCount;
+    end
+    
+    if ImageCount==ImageInfo.numImages
+    else
+        disp('Warning, Image number not match!!!');
+        return
+    end
     ImageInfo.metadata = MetadataStru;
     ImageInfo.Experiment = ExperimentStru;
 
