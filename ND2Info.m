@@ -32,7 +32,6 @@ Metadata = calllib('Nd2ReadSdk', 'Lim_FileGetMetadata', FilePointer);
 
 if Metadata.isNull
     MetadataStru=[];
-    disp('Warning, can not get metadata');
 else
     TestLength=3000;
     setdatatype(Metadata, 'int8Ptr', TestLength)
@@ -53,7 +52,6 @@ Experiment = calllib('Nd2ReadSdk', 'Lim_FileGetExperiment', FilePointer);
 if Experiment.isNull
     ExperimentStru=[];
     NumInCoord=[];
-    disp('Warning, can not get Experiment Info');
 else
     TestLength=3000;
     setdatatype(Experiment, 'int8Ptr', TestLength)
@@ -87,6 +85,8 @@ ImageInfo.ImageWidth = AttributesStru.widthPx;
 ImageInfo.ImageHeight = AttributesStru.heightPx;
 ImageInfo.Component = AttributesStru.componentCount;
 
+
+[ImageInfo] = CheckInfo(ImageInfo);
 PrintInfo(ImageInfo);
 
 calllib('Nd2ReadSdk', 'Lim_FileClose', FilePointer);
