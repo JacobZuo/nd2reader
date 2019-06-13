@@ -26,18 +26,27 @@ function [ImageInfo] = CheckInfo(ImageInfo)
         end
 
     end
-
-    DimensionsStruct(ChannelDimension) = [];
-
-    ChannelNumIndex = strfind(Description, 'Planes');
-    ChannelNum = str2double((Description(ChannelNumIndex + 8:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelNumIndex) - 1))));
-
-    ChannelIndex = strfind(Description, 'Plane #');
-
-    for i = 1:ChannelNum
-        Channel(i).name = Description(ChannelIndex(i) + 18:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelIndex(i) + 18) - 1));
+    
+    if exist('ChannelDimension','var')
+        DimensionsStruct(ChannelDimension) = [];
+    else
     end
-
+    
+    ChannelNumIndex = strfind(Description, 'Planes');
+    
+    if isempty(ChannelNumIndex)
+        ChannelNum = 1;
+        ChannelIndex = max(strfind(Description, 'Name'));
+        Channel.name = Description(ChannelIndex(i) + 6:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelIndex(i) + 5) - 1));
+    else
+        ChannelNum = str2double((Description(ChannelNumIndex + 8:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelNumIndex) - 1))));
+        ChannelIndex = strfind(Description, 'Plane #');
+        
+        for i = 1:ChannelNum
+            Channel(i).name = Description(ChannelIndex(i) + 18:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelIndex(i) + 18) - 1));
+        end
+    end
+    
     if isempty(MetadataStru)
         disp('Warning, can not get Metadata');
         disp('Set channel infomation with ImageInfo.description');
