@@ -8,6 +8,12 @@ This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' (Windo
 
 For now, only uint16 mono-color ```.nd2``` file is supported. The reader can get the infomation of channel infomation and loops infomation of the file.
 
+**Knowing issues:**
+
+1. Now we cannot get metadata from some spesific ```.nd2``` file with the ```ND2SDK```. For these files we use the information in ```TextInfo``` to get the channel and loop information.  
+2. For the files that show empty metadata in the script, we can neither get the frame metadata. Therefore, the ```SeqInfo``` funtion do not work for these files.  
+3. By comparing the information in ```TextInfo``` and ```ExperimentInfo```, I found that there are some difference in loop information if you set multipoints in ```xp position loop``` but not check all the choice box during capturing. ```ExperimentInfo``` record all the points you set in ```nd2capture``` while ```TextInfo``` only record the points that you really captured during the expriment.
+
 ## 2. Usage
 
 ### 2.1 Load the library
@@ -179,3 +185,4 @@ You can get the time and position information of each frame in the sequence by
 ```
 
 If your ```.nd2``` file contains multiple channels. The infomation will be stored into cells as ```Seqtime{i}, SeqPosition{i}```.
+
