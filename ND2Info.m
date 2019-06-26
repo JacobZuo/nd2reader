@@ -80,7 +80,7 @@ ImageInfo.description = TextInfoStru.description;
 ImageInfo.numImages = numImages;
 ImageInfo.CoordSize = CoordSize;
 
-ImageInfo.NumInCoord = NumInCoord;
+% ImageInfo.NumInCoord = NumInCoord;
 ImageInfo.ImageWidth = AttributesStru.widthPx;
 ImageInfo.ImageHeight = AttributesStru.heightPx;
 ImageInfo.Component = AttributesStru.componentCount;
