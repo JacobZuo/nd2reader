@@ -100,6 +100,6 @@ ImageInfo.Component = AttributesStru.componentCount;
 [ImageInfo] = CheckInfo(ImageInfo);
 PrintInfo(ImageInfo);
 
-calllib('Nd2ReadSdk', 'Lim_FileClose', FilePointer);
+ND2Close(FilePointer)
 
 end
