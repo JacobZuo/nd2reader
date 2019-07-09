@@ -58,7 +58,7 @@ for i=1:size(Num,2)
     else
     end
     
-    [~, Barlength] = DisplayBar(i, size(Num,2));
+    DisplayBar(i, size(Num,2));
     
 end
 
