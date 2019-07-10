@@ -53,23 +53,8 @@ function [] = ND2TIF(FileName, varargin)
     disp('Setting .tif stack(s) information...')
 
     ChannelNum = ImageInfo.Component;
-    LayerNum = ImageInfo.CoordSize+1;
+    LayerNum = ImageInfo.CoordSize;
     
-    
-    if isempty(ImageInfo.Experiment)
-        for i=1:LayerNum
-            ImageInfo.Experiment(i).type=['Loop',num2str(i)];
-        end
-    else
-    end
-    
-%     if isempty(ImageInfo.metadata)
-%         for i=1:ChannelNum
-%             ImageInfo.metadata.channels(i).channel.name=['Channel',num2str(i)];
-%         end
-%     else
-%     end
-
     LayerIndex = cell(0);
 
     if exist('Channel', 'var')
@@ -81,25 +66,15 @@ function [] = ND2TIF(FileName, varargin)
     if exist('Layer0', 'var')
         Layer0Index = Layer0;
     else
-%         if ~isfield(ImageInfo.Experiment,'count')
-%         disp('Warnning, can not get Experiment info, please input Layer0 manually.')
-%         return
-%         else
         Layer0Index = 1:ImageInfo.Experiment(1).count;
-%         end
     end
 
     if exist('Layer1', 'var')
         Layer1Index = Layer1;
         LayerIndex{1} = Layer1Index;
     elseif LayerNum >= 2
-%         if ~isfield(ImageInfo.Experiment,'count')
-%         disp('Warnning, can not get Experiment info, please input Layer1 manually.')
-%         return
-%         else
         Layer1Index = 1:ImageInfo.Experiment(2).count;
         LayerIndex{1} = Layer1Index;
-%         end
     end
 
     if exist('Layer2', 'var')
@@ -107,10 +82,6 @@ function [] = ND2TIF(FileName, varargin)
         LayerIndex{2} = Layer2Index;
     elseif LayerNum >= 3
         disp('Warning, too many layers, compress high level layers into one stack.')
-%         if ~isfield(ImageInfo.Experiment,'count')
-%         disp('Warnning, can not get Experiment info, please input Layer2 manually.')
-%         return
-%         else
         
         ExperimentCount3 = 1;
 
@@ -120,7 +91,6 @@ function [] = ND2TIF(FileName, varargin)
 
         Layer2Index = 1:ExperimentCount3;
         LayerIndex{2} = Layer2Index;
-%         end
     end
 
     disp('--------------------------------------------------------------------------------')

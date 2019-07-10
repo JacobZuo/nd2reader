@@ -58,13 +58,11 @@ for i=1:size(Num,2)
     else
     end
     
-    [~, Barlength] = DisplayBar(i, size(Num,2));
+    DisplayBar(i, size(Num,2));
     
 end
 
-
-
-calllib('Nd2ReadSdk', 'Lim_FileClose', FilePointer);
+ND2Close(FilePointer)
 
 end
 

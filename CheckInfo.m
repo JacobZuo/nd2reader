@@ -80,8 +80,8 @@ function [ImageInfo] = CheckInfo(ImageInfo)
         disp('Set loops infomation with ImageInfo.description');
 
         for i = 1:size(DimensionsStruct, 2)
-            ExperimentStru(i).count = DimensionsStruct(i).Size;
-            ExperimentStru(i).type = [DimensionsStruct(i).name, 'loop'];
+            ExperimentStru(i,1).count = DimensionsStruct(i).Size;
+            ExperimentStru(i,1).type = [DimensionsStruct(i).name, 'loop'];
         end
 
     else
@@ -106,8 +106,15 @@ function [ImageInfo] = CheckInfo(ImageInfo)
 
     end
 
+    if ImageInfo.CoordSize==size(ExperimentStru,1)
+    else        
+        disp(['Warning, CoordSize not match.'])
+        disp('Set CoordSize infomation with ImageInfo.description');
+        ImageInfo.CoordSize=size(ExperimentStru,1);
+    end
+    
     ImageCount=1;
-    for i=1:size(ExperimentStru,3)
+    for i=1:size(ExperimentStru,1)
         ImageCount=ExperimentStru(i).count*ImageCount;
     end
     
@@ -116,6 +123,10 @@ function [ImageInfo] = CheckInfo(ImageInfo)
         disp('Warning, Image number not match!!!');
         return
     end
+    
+    
+    
+    
     ImageInfo.metadata = MetadataStru;
     ImageInfo.Experiment = ExperimentStru;
 
