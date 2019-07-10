@@ -37,12 +37,6 @@ loadlibrary('Nd2ReadSdk', 'Nd2ReadSdk.h')
 ```
 Noticed that you should add the 'SDK' (both 'include' and 'windows' folder) into Matlab 'Path'. 
 
-For Linux version, you should add both 'include' and 'Linux' folder into Matlab 'Path' and you can load the library with,
-
-```
-loadlibrary('libNd2ReadSdk', 'Nd2ReadSdk.h')
-```
-
 ### 2.2 Read the infomation in '.nd2' file
 
 You can run the command below to get the information from the file. ```FileName``` should contain the full path and extension name, such as ```'D:\Data\Test.nd2'```
