@@ -81,7 +81,9 @@ function [] = ND2TIF(FileName, varargin)
         Layer2Index = Layer2;
         LayerIndex{2} = Layer2Index;
     elseif LayerNum >= 3
-        disp('Warning, too many layers, compress high level layers into one stack.')
+        warning('off','backtrace')
+        warning('Too many layers, compress high level layers into one stack.')
+        warning('on','backtrace')
         
         ExperimentCount3 = 1;
 
@@ -358,8 +360,10 @@ function [] = ND2TIF(FileName, varargin)
             end
 
         elseif LayerNum >= 3
+            warning('off','backtrace')
+            warning('Too many layers, do not support montage mode.')
+            warning('on','backtrace')
 
-            disp('Warning, too many layers, do not support montage mode.')
             return
         end
 
