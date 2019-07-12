@@ -1,6 +1,7 @@
 function [FilePointer, ImagePointer, ImageReadOut] = ND2Open(FileName)
 
     if not(libisloaded('Nd2ReadSdk'))
+        warning('off', 'MATLAB:loadlibrary:cppoutput')
         [~, ~] = loadlibrary('Nd2ReadSdk', 'Nd2ReadSdk.h');
     end
 
