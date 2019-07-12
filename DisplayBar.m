@@ -4,31 +4,24 @@ function [Percentage, Barlength] = DisplayBar(Index, Length)
     Barlength = floor(Index / Length * 60);
 
     if Index == 1
-        fprintf('Processing [')
+        BarStart='Processing [';
+    elseif Index == Length
+        BarStart = repmat('\b',1,80);
     else
-        fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
+        BarStart = repmat('\b',1,68);
     end
 
     if Barlength == 60
-
-        for i = 1:60
-            fprintf('#')
-        end
-
+        BarText=['Finished!  [', repmat('#',1,60)];
     elseif Barlength >= 1
-
-        for i = 1:(Barlength - 1)
-            fprintf('#')
-        end
-
-        fprintf('>')
+        BarText=[repmat('#',1,(Barlength - 1)),'>'];
+    else
+        BarText='';
     end
 
-    for i = 1:(60 - Barlength)
-        fprintf('-')
-    end
+    BarText=[BarStart, BarText,repmat('-',1,(60 - Barlength)),sprintf(']%6.1f', Percentage),'%%'];
 
-    fprintf(']%6.1f%%', Percentage)
+    fprintf(BarText)
 
     if Barlength == 60
         fprintf('\n')
