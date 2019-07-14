@@ -6,8 +6,6 @@
 
 This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' Windows (The Linux version is provided [here](https://github.com/JacobZuo/nd2reader-linux)).  The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imaging](https://www.laboratory-imaging.com/). 
 
-The windows version is 'Master' branch and if you needed Linux version you can change to 'Linux' branch and download it.
-
 For now, only uint16 mono-color ```.nd2``` file is supported. The reader can get the infomation of channel infomation and loops infomation of the file.
 
 **Knowing issues:**
