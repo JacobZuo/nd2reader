@@ -102,5 +102,6 @@ ImageInfo.Component = AttributesStru.componentCount;
 PrintInfo(ImageInfo);
 
 ND2Close(FilePointer)
+clear('FilePointer')
 
 end

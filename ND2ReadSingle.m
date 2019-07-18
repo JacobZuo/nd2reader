@@ -12,5 +12,6 @@ end
 [Image] = ND2Read(FilePointer, ImagePointer, ImageReadOut, Num);
 
 ND2Close(FilePointer)
+clear('FilePointer')
 
 end
