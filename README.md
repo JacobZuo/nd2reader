@@ -28,7 +28,7 @@ mex -setup
 
 If you do not have any compiler, you can add 'MinGW64 Compiler' in 'HOME' > 'Add-Ons' follow the image below.
 
-![MinGW64](/Resource/MinGW64.jpg "MinGW64")
+![MinGW64](./Resource/MinGW64.jpg "MinGW64")
 
 Once you set up the C compiler, you should able to sucessfully loading the library by command,
 
