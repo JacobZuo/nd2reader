@@ -2,6 +2,7 @@ function [] = ND2TIF(FileName, varargin)
 
     Montage = 'off';
     ChannelMontage = 'off';
+    ChannelConnect = 'off';
     Tag = char(datetime('now', 'format', '-HH-mm-ss'));
 
     Resize = 'off';
@@ -18,6 +19,11 @@ function [] = ND2TIF(FileName, varargin)
 
     if strcmp(ChannelMontage, 'on')
         Montage = 'on';
+    else
+    end
+    
+    if strcmp(ChannelConnect, 'on')
+        Montage = 'off';
     else
     end
 
@@ -104,9 +110,16 @@ function [] = ND2TIF(FileName, varargin)
 
         if LayerNum == 1
             ImageIndex = 1:ImageInfo.numImages;
+            
+            
+            if strcmp(ChannelConnect, 'off')
 
             for i = 1:ChannelNum
                 TifFileName{i} = [SavePath, Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '.tif'];
+            end
+            
+            elseif strcmp(ChannelConnect, 'on')
+                TifFileName = [SavePath, Name, Tag, '_All', '.tif'];
             end
 
             for i = 1:size(Layer0Index(:), 1)
@@ -118,9 +131,13 @@ function [] = ND2TIF(FileName, varargin)
                     Original_Image = reshape(Image(ChannelIndex(j), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
 
                     if strcmp(Compress, 'off')
-
-                        imwrite(Original_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
-
+                    
+                        if strcmp(ChannelConnect, 'off')
+                            imwrite(Original_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                        elseif strcmp(ChannelConnect, 'on')
+                            imwrite(Original_Image, TifFileName, 'WriteMode', 'append', 'Compression', 'none')
+                        end
+                        
                     else
 
                         if i == 1
@@ -130,7 +147,12 @@ function [] = ND2TIF(FileName, varargin)
                         end
 
                         Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
-                        imwrite(Compressed_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+
+                        if strcmp(ChannelConnect, 'off')
+                            imwrite(Compressed_Image, TifFileName{ChannelIndex(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                        elseif strcmp(ChannelConnect, 'on')
+                            imwrite(Compressed_Image, TifFileName, 'WriteMode', 'append', 'Compression', 'none')
+                        end
 
                     end
 
@@ -145,7 +167,12 @@ function [] = ND2TIF(FileName, varargin)
             for i = 1:ChannelNum
 
                 for j = 1:ImageInfo.Experiment(2).count
-                    TifFileName{i}{j} = [SavePath, Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
+                    if strcmp(ChannelConnect, 'off')
+                        TifFileName{i}{j} = [SavePath, Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
+                    elseif strcmp(ChannelConnect, 'on')
+                        TifFileName{j} = [SavePath, Name, Tag, '_All', '_' ImageInfo.Experiment(2).type, '_', num2str(j), '.tif'];
+                    end
+                    
                 end
 
             end
@@ -162,9 +189,11 @@ function [] = ND2TIF(FileName, varargin)
                         Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
 
                         if strcmp(Compress, 'off')
-
-                            imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
-
+                            if strcmp(ChannelConnect, 'off')
+                                imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                            elseif strcmp(ChannelConnect, 'on')
+                                imwrite(Original_Image, TifFileName{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                            end
                         else
 
                             if i == 1
@@ -174,7 +203,11 @@ function [] = ND2TIF(FileName, varargin)
                             end
 
                             Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
-                            imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                            if strcmp(ChannelConnect, 'off')
+                                imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                            elseif strcmp(ChannelConnect, 'on')
+                                imwrite(Compressed_Image, TifFileName{Layer1Index(j)}, 'WriteMode', 'append', 'Compression', 'none')
+                            end
 
                         end
 
@@ -193,8 +226,14 @@ function [] = ND2TIF(FileName, varargin)
                 for j = 1:ImageInfo.Experiment(2).count
 
                     for k = 1:ExperimentCount3
-                        TifFileName{i}{j}{k} = [SavePath, Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
-                    end
+                        
+                        if strcmp(ChannelConnect, 'off')
+                            TifFileName{i}{j}{k} = [SavePath, Name, Tag, '_', ImageInfo.metadata.channels(i).channel.name, '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
+                        elseif strcmp(ChannelConnect, 'on')
+                            TifFileName{j}{k} = [SavePath, Name, Tag, '_All', '_' ImageInfo.Experiment(2).type, '_', num2str(j), '_' ImageInfo.Experiment(3).type, '_', num2str(k) '.tif'];
+                        end
+                        
+                     end
 
                 end
 
@@ -213,9 +252,13 @@ function [] = ND2TIF(FileName, varargin)
                             Original_Image = reshape(Image(ChannelIndex(k), :), [ImageReadOut.uiWidth, ImageReadOut.uiHeight])';
 
                             if strcmp(Compress, 'off')
-
-                                imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
-
+                        
+                                if strcmp(ChannelConnect, 'off')
+                                    imwrite(Original_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+                                elseif strcmp(ChannelConnect, 'on')
+                                    imwrite(Original_Image, TifFileName{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+                                end
+                                
                             else
 
                                 if i == 1
@@ -225,8 +268,11 @@ function [] = ND2TIF(FileName, varargin)
                                 end
 
                                 Compressed_Image = ImageCompress(Original_Image, Min_Intensity, Max_Intensity, Resize);
-                                imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
-
+                                if strcmp(ChannelConnect, 'off')
+                                    imwrite(Compressed_Image, TifFileName{ChannelIndex(k)}{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+                                elseif strcmp(ChannelConnect, 'on')
+                                    imwrite(Compressed_Image, TifFileName{Layer1Index(j)}{Layer2Index(l)}, 'WriteMode', 'append', 'Compression', 'none')
+                                end
                             end
 
                         end
