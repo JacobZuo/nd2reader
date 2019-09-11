@@ -169,7 +169,8 @@ For montage stacks, the value contols the final output iamge size of the stack. 
 |     ```Layer1```     	| The index of the layer1 loop. If ```Montage``` is ```'on'```, the images will be combined same as the matrix. For example, ```[1,2;3,4]``` 	|
 |     ```Channel```    	| The index of the channels. If ```ChannelMontage``` is ```'on'```, the images will be combined same as the matrix. For example, ```[1,2]``` 	|
 |     ```Montage```    	| Control if combined the images in layer1 loop into one stack. For example, ```'on'```, ```'off'```.                                          	|
-| ```ChannelMontage``` 	| Control if combined the images in different channels into one stack. For example, ```'on'```, ```'off'```.                                   	|
+| ```ChannelMontage``` 	| Control if combined (side by side) the images in different channels into one stack. For example, ```'on'```, ```'off'```. 
+| ```ChannelConnect``` 	| Control if link the images in different channels into one stack. For example, ```'on'```, ```'off'```.                                     	|
 |    ```Compress```    	| Control if compress the images into ```8 bits```. For example, ```'on'```, ```'off'```.                                                      	|
 |     ```Resize```     	| Control if resize the images. For example, ```1080```, ```'off'```.                                                                        	|
 
