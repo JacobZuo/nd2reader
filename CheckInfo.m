@@ -37,7 +37,7 @@ function [ImageInfo] = CheckInfo(ImageInfo)
     if isempty(ChannelNumIndex)
         ChannelNum = 1;
         ChannelIndex = max(strfind(Description, 'Name'));
-        Channel.name = Description(ChannelIndex(i) + 6:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelIndex(i) + 5) - 1));
+        Channel.name = Description(ChannelIndex(1) + 6:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelIndex(1) + 5) - 1));
     else
         ChannelNum = str2double((Description(ChannelNumIndex + 8:min(DescriptionSplitIndex(DescriptionSplitIndex > ChannelNumIndex) - 1))));
         ChannelIndex = strfind(Description, 'Plane #');
