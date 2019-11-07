@@ -5,23 +5,23 @@
 /*! \mainpage
    The Nd2ReadSdk is a set of C functions (and structures) declared in Nd2ReadSdk.h.
 
-   Nd2ReadSdk is a thin wrapper around proprietary LimFile library. It uses pointers and JSON strings
+   Nd2ReadSdk is a thin wrapper around proprietary limfile library. It uses pointers and JSON strings
    to pass out image data and metadata. Internally the SDK uses N. Lohmanns JSON
    library available at https://github.com/nlohmann/json.
 
-   The SDK is available on Linux, MacOS and Windows. It consists of:
+   The SDK is available for Linux, MacOS and Windows. It consists of:
    - one header file (Nd2ReadSdk.h),
    - two dynamic libraries (libLimFile.so and libNd2ReadSdk.so for Linux,
-   libLimFile.dylib and libNd2ReadSdk.dylib for MacOS and LimFile.dll and Nd2ReadSdk.dll for Windows),
-   - two static libraries (libLimFile.a and libNd2ReadSdk.a for Linux and MacOS
-   and LimFileStatic.lib and Nd2ReadSdkStatic.lib for Windows),
-   - Nd2Info example as source and as built program both dynamic and static version and
+   libLimFile.dylib and libNd2ReadSdk.dylib for MacOS and limfile.dll and Nd2ReadSdk.dll for Windows),
+   - Nd2Info example
    - documentation.
 
-   When linking statically with Nd2ReadSdkStatic:
-   - set the LX_STATIC_LINKING preprocessor definiton and
-   - link to dynamic LimFile or
-   - link to static LimFileStatic and provide static libs for zlib and libtiff
+   ## Windows dependencies
+
+   On Windows the SDK was built with Microsoft Visual Studio 2015.
+
+   The SDK needs "Visual C++ Redistributable for Visual Studio 2015" which can be downloaded from:
+   https://www.microsoft.com/en-us/download/details.aspx?id=48145
 
    ## Linux dependencies
 
@@ -29,46 +29,10 @@
 
    Here are the runtime dependencies of the Nd2Info and Nd2InfoStatic:
 ~~~~~
-   $ ldd -d Nd2Info
-	linux-vdso.so.1
-	libNd2ReadSdk.so
-	libLimFile.so
-   libz.so.1
-   libtiff.so.5
-	libicuuc.so.50
-	libicutu.so.50
-	libstdc++.so.6
-	libm.so.6
-	libgcc_s.so.1
-   libc.so.6
-   libjbig.so.2.0
-   libjpeg.so.62
-   libicudata.so.50
-	libpthread.so.0	
-	libdl.so.2
-	libicui18n.so.50
-	/lib64/ld-linux-x86-64.so.2
-
-   $ ldd -d Nd2InfoStatic
-   linux-vdso.so.1
-   libz.so.1
-   libtiff.so.5
-   libicuuc.so.50
-   libicutu.so.50
-   libstdc++.so.6
-   libm.so.6
-   libgcc_s.so.1
-   libc.so.6
-   libjbig.so.2.0
-   libjpeg.so.62
-   libicudata.so.50
-   libpthread.so.0
-   libdl.so.2
-   libicui18n.so.50
-   /lib64/ld-linux-x86-64.so.2
+   TBD
 ~~~~~
 
-   The libicu*.so are part of the ICU package needed to handle unicide text.
+   The libicu*.so are part of the ICU package needed to handle unicode text.
    On Debian it can be installed using APT package manager (libicu52).
 
    ## MacOS dependencies
@@ -90,17 +54,7 @@
    	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1252.0.0)
 ~~~~~
 
-   ## Windows dependencies
-
-   On Windows the SDK was built with Microsoft Visual Studio 2015.
-
-   - Nd2Info.exe requires Nd2ReadSdk.dll,  LimFile.dll, tiff.dll, zlib.dll, msvcp140.dll, vcruntime140.dll and kernel32.dll
-   - Nd2InfoStatic.exe requires tiff.dll, zlib.dll, msvcp140.dll, vcruntime140.dll and kernel32.dll
-
-   Visual C++ Redistributable for Visual Studio 2015 (msvcp140.dll and vcruntime140.dll)
-   can be downloaded from [Microsoft](https://www.microsoft.com/en-US/download/details.aspx?id=48145).
-
-   ## Nd2Info and Nd2InfoStatic example program
+   ## Nd2Info example program
 
    The program outputs given metadata as JSON string representation to stdout.
    Following metadata can be retrieved:
