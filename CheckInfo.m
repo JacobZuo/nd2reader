@@ -11,6 +11,13 @@ function [ImageInfo] = CheckInfo(ImageInfo)
 
     DimensionsIndex = strfind(Description, 'Dimensions');
 
+    if isempty(DimensionsIndex)
+    
+        DimensionsStruct.name = 'Unkonwn';
+        DimensionsStruct.Size = 1;
+    
+    else
+    
     Dimensions = Description(DimensionsIndex + 12:min(DescriptionSplitIndex(DescriptionSplitIndex > DimensionsIndex)) - 1);
     Dimensions(Dimensions == 120) = [];
     DimensionsCell = strsplit(Dimensions);
@@ -31,6 +38,9 @@ function [ImageInfo] = CheckInfo(ImageInfo)
         DimensionsStruct(ChannelDimension) = [];
     else
     end
+    
+    end
+    
     
     ChannelNumIndex = strfind(Description, 'Planes');
     
@@ -114,9 +124,12 @@ function [ImageInfo] = CheckInfo(ImageInfo)
     end
     
     if ImageCount==ImageInfo.numImages
+    elseif ImageCount==ImageInfo.Attributes.sequenceCount
+        warning('%s\n%s','Image number not match!!!', 'Reset Image number.');
+        ImageInfo.numImages=ImageCount;
     else
-        warning('Image number not match!!!');
-        return
+        warning('%s\n%s','Image number not match!!!', 'Reset Image number.');
+        ImageInfo.numImages=ImageInfo.Attributes.sequenceCount;
     end
     
     ImageInfo.metadata = MetadataStru;

@@ -73,7 +73,7 @@ else
     end
     
 end
-
+ImageInfo.Attributes = AttributesStru;
 ImageInfo.metadata = MetadataStru;
 ImageInfo.Experiment = ExperimentStru;
 ImageInfo.capturing = TextInfoStru.capturing;
