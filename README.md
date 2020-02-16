@@ -1,8 +1,8 @@
 # Loading '.nd2' file into Matlab
 
-![MIT - License](https://img.shields.io/bower/l/bootstrap.svg)
+![MIT - License](https://img.shields.io/bower/l/bootstrap.svg)  [![View ND2 Reader on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://www.mathworks.com/matlabcentral/fileexchange/73271-nd2-reader)
 
-## 1. Overview
+## Overview
 
 This is a small tool to load '.nd2' image stack into Matlab with 'ND2SDK' Windows (The Linux version is provided [here](https://github.com/JacobZuo/nd2reader-linux)).  The SDK is provided [here](https://www.nd2sdk.com/) by [Laboratory Imaging](https://www.laboratory-imaging.com/). 
 
@@ -14,9 +14,9 @@ For now, only uint16 mono-color ```.nd2``` file is supported. The reader can get
 2. For the files that show empty metadata in the script, we can neither get the frame metadata. Therefore, the ```SeqInfo``` funtion do not work for these files.  
 3. By comparing the information in ```TextInfo``` and ```ExperimentInfo```, I found that there are some difference in loop information if you set multipoints in ```xp position loop``` but not check all the choice box during capturing. ```ExperimentInfo``` record all the points you set in ```nd2capture``` while ```TextInfo``` only record the points that you really captured during the expriment.
 
-## 2. Usage
+## Usage
 
-### 2.1 Load the library
+### Load the library
 
 Matlab provides function ```loadlibrary``` to load C / C++ libraries into Matlab. You need to configure for C language compilation in your Matlab.
 
@@ -35,7 +35,7 @@ loadlibrary('Nd2ReadSdk', 'Nd2ReadSdk.h')
 ```
 Noticed that you should add the 'SDK' (both 'include' and 'windows' folder) into Matlab 'Path'. 
 
-### 2.2 Read the infomation in '.nd2' file
+### Read the infomation in '.nd2' file
 
 You can run the command below to get the information from the file. ```FileName``` should contain the full path and extension name, such as ```'D:\Data\Test.nd2'```
 
@@ -60,7 +60,7 @@ The total images number should be same as the product of loops number in each la
 ![ND2 Oganization](/Resource/nd2-oganization.jpg "ND2 Oganization")
 
 
-### 2.3 Read image.
+### Read image.
 
 If you want to read a specific image in a '.nd2' file. You can use the command below to read the image with the specific sequence index (not the image index) ```Num```.
 
@@ -77,7 +77,7 @@ If you haven't spicified the image index ```Num```. ```[Image] = ND2ReadSingle(F
 Here, ```Single``` means store all the data into a single variable.
 
 
-### 2.4 TIF stack output
+### TIF stack output
 
 The ```ND2TIF``` function can save the ```.nd2``` stack into ```.tif``` stacks based on loops and channels. 
 
@@ -94,9 +94,9 @@ You can also control the output ```.tif``` stack with ```Parameter``` as below. 
 ND2TIF(FileName, 'Parameter', value)
 ```
 
-## 3. Advanced usage
+## Advanced usage
 
-### 3.1 Read images with a loop
+### Read images with a loop
 
 If your '.nd2' file is very huge and not able to read all the data into the memory. You can also read the image with a ```for``` loop. But, do not use ```ND2ReadSingle``` in a loop as each calling will open and close the file pointer once.
 
@@ -111,7 +111,7 @@ end
 ND2Close(FilePointer)
 ```
 
-### 3.2 Select .tif output channel and merge montage stack.
+### Select .tif output channel and merge montage stack.
 
 You can control output ```.tif``` stack length by setting ```..., 'Layer0', Index``` such as,
 
@@ -146,7 +146,7 @@ ND2TIF(FileName, 'Montage', 'on', 'Layer1', [2, 3; 4, 5], 'ChannelMontage', 'on'
 You can also set the arrangment of each channel by set ```'Channel'``` with a matrix.
 
 
-### 3.3 Image compress and resize
+### Image compress and resize
 
 You can set ```'Compress', 'on'``` to compress the images into ```8 bits``` ```.tif``` stacks. The images will be compress to ```0-255``` with the ```min``` and ```max``` value of the first image in the stack.
 
@@ -161,7 +161,7 @@ ND2TIF(FileName, 'Resize', 1080)
 
 For montage stacks, the value contols the final output iamge size of the stack. You can set the value to other number as you with, such as, ```'Resize', 1024``` or ```'Resize', 720``` 
 
-### 3.4 Controling parameters
+### Controling parameters
 
 |      Parameters      	| Value                                                                                                                                    	|
 |:--------------------:	|------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -177,7 +177,7 @@ For montage stacks, the value contols the final output iamge size of the stack. 
 For now, set ```'ChannelMontage', 'on'``` will automatically set ```'Montage', 'on'``` and ```'Compress', 'on'```； set ```'Resize', 1080``` （or other number） will automatically set ```'Compress', 'on'```; set ```'Resize', 'on'``` will automatically set ```'Resize', 1080```.
 
 
-### 3.5 Sequence infomation.
+### Sequence infomation
 
 You can get the time and position information of each frame in the sequence by
 
