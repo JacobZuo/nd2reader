@@ -84,7 +84,16 @@ function [ImageInfo] = CheckInfo(ImageInfo)
 
     end
 
-    if isempty(ExperimentStru)
+    if isempty(ExperimentStru) && isempty(DimensionsIndex)
+        warning('%s\n%s','Can not get Experiment Info.','There is not any loop in the Experiment Info.');
+        
+        for i = 1:size(DimensionsStruct, 2)
+            ExperimentStru(i,1).count = DimensionsStruct(i).Size;
+            ExperimentStru(i,1).type = [DimensionsStruct(i).name, 'loop'];
+        end
+        
+        
+    elseif isempty(ExperimentStru) 
         warning('%s\n%s','Can not get Experiment Info.','Set loops infomation with ImageInfo.description.');
 
         for i = 1:size(DimensionsStruct, 2)
