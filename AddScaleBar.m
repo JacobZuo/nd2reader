@@ -7,10 +7,10 @@ ImageHeight=ImageSize(1);
 ImageWidth=ImageSize(2);
 BarLengthTest=[1,2.5,5,10,25,50,100,200,500,1000,2000,5000,10000];
 
-    if isempty(varargin)
+    if nargin==2
         BarLength=min(BarLengthTest(BarLengthTest>ImageWidth.*Scale/4));
     else
-        BarLength=min(BarLengthTest(abs(BarLengthTest-varargin)==min(abs(BarLengthTest-varargin))));
+        BarLength=min(BarLengthTest(abs(BarLengthTest-varargin{1})==min(abs(BarLengthTest-varargin{1}))));
     end
 
     BarNumber=find(BarLength==BarLengthTest);
